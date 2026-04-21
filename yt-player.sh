@@ -2,14 +2,30 @@
 
 set -euo pipefail
 
-CONFIG="${1:-config.json}"
+
+CONFIG="config.json"
 CACHE_DIR="./cache"
 PID_FILE=".mpv.pid"
-MAX_DURATION=0
-# FORMAT="bestaudio[abr<=128]/bestaudio"
+MAX_DURATION=600
 FORMAT="bestaudio/best"
-# FORMAT="bestaudio[ext=m4a]/bestaudio/best" # // aggressive audio format selection, prefer m4a but fallback to any audio if not available
-# FORMAT="bestaudio"
+
+source .env.settings
+
+if [[ "$#" -gt 1 ]]; then
+  # 1. Capture the last argument passed to the function/script
+  LAST_ARG="${!#}"
+
+  # 2. Apply the default "config.json" if the last argument is empty
+  CONFIG="${LAST_ARG:-config.json}"
+fi
+
+echo $*
+
+# Restrart
+if [[ "$#" -gt 0 ]] && [[ $1 == "restart" || $1 == "-r" || $1 == "--restart" || $1 == "r" ]]; then
+  ( [ -f "$PID_FILE" ] && $0 kill || echo "No running player found to kill" ) && sleep 1 && exec "$0" "$CONFIG"
+fi
+
 
 # kill if kill included in the command line arguments
 if [[ "$#" -gt 0 ]] && [[ $1 == "kill" || $1 == "-k" || $1 == "--kill" || $1 == "k" ]]; then
@@ -27,6 +43,7 @@ if [[ "$#" -gt 0 ]] && [[ $1 == "kill" || $1 == "-k" || $1 == "--kill" || $1 == 
     echo "Player stopped and PID file removed."
   else
     echo "No PID file found. Player may not be running."
+    exit 1
   fi
   exit 0
 fi
@@ -117,8 +134,14 @@ for i in $(seq 0 $((count - 1))); do
 
   echo "[↓] Downloading: $name"
   yt-dlp \
-    --download-sections \
-    "*0-${MAX_DURATION}" \
+    --cookies ./cache/cookies.txt \
+    --force-ipv4 \
+    --sleep-requests 2 \
+    --sleep-interval 3 \
+    --max-sleep-interval 8 \
+    --retries 5 \
+    --extractor-args "youtube:player_client=android" \
+    --download-sections "*0-${MAX_DURATION}" \
     -f "$FORMAT" \
     -o "$CACHE_DIR/${safe_name}.%(ext)s" \
     "$target"
@@ -149,7 +172,7 @@ for i in $(seq 0 $((count - 1))); do
   #   volume="1"
   # fi
   volume="$(awk -v v="$volume" 'BEGIN {printf "%.0f", v * 100}')"
-  nohup mpv --no-video --volume="$volume" --loop-playlist=inf "${file}" >/dev/null 2>&1 &
+  nohup mpv --no-video --volume="$volume" --loop-playlist=inf "${file}" --aid=1 >/dev/null 2>&1 &
   pid=$!
   echo "$pid" >> "$PID_FILE"
   echo "[✓] Started player for $(basename "$file") (PID $pid)"

@@ -1,0 +1,4 @@
+cache/*
+!cache/.gitkeep
+.mpv.pid
+config.json

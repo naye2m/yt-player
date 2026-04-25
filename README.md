@@ -24,6 +24,16 @@ sudo apt install yt-dlp mpv jq
 
 ## Usage
 
+### new
+
+```bash
+tar -xzf yt-player.tar.gz
+cd yt-player
+make install
+```
+
+### old
+
 1. Edit `config.json` with your items.
 2. Run:
 
@@ -57,3 +67,4 @@ chmod +x yt-player.sh
 kill "$(cat .mpv.pid)"
 rm -f .mpv.pid
 ```
+

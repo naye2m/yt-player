@@ -2,14 +2,16 @@
 
 set -euo pipefail
 
-
-CONFIG="config.json"
-CACHE_DIR="./cache"
-PID_FILE=".mpv.pid"
-MAX_DURATION=600
+CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/yt-player"
+CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/yt-player"
+CONFIG="$CONFIG_DIR/config.json"
+FAV_CONFIG="$CONFIG_DIR/fav.config.json"
 FORMAT="bestaudio/best"
+PID_FILE="$CACHE_DIR/.mpv.pid"
+MAX_DURATION=600
 
-source .env.settings
+[[ -f $CONFIG_DIR/.env.settings ]] && source $CONFIG_DIR/.env.settings
+
 
 if [[ "$#" -gt 1 ]]; then
   # 1. Capture the last argument passed to the function/script
@@ -134,7 +136,7 @@ for i in $(seq 0 $((count - 1))); do
 
   echo "[↓] Downloading: $name"
   yt-dlp \
-    --cookies ./cache/cookies.txt \
+    --cookies $CACHE_DIR/cookies.txt \
     --force-ipv4 \
     --sleep-requests 2 \
     --sleep-interval 3 \

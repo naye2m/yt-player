@@ -4,7 +4,7 @@ CONFIG_DIR = $(HOME)/.config/yt-player
 CACHE_DIR = $(HOME)/.cache/yt-player
 
 install:
-	@echo "Installing yt-player..."
+	@echo Installing yt-player...
 
 	mkdir -p $(BIN_DIR)
 	mkdir -p $(CONFIG_DIR)
@@ -16,16 +16,19 @@ install:
 
 	# Install default config (only if not exists)
 	if [ ! -f $(CONFIG_DIR)/config.json ]; then \
-		cp config/config.example.json $(CONFIG_DIR)/config.json; \
+		cp config/fav.config.json $(CONFIG_DIR)/config.json; \
 	fi
 
 	cp config/fav.config.json $(CONFIG_DIR)/
 
 	# Install cache files
-	cp -r cache/* $(CACHE_DIR)/ 2>/dev/null || true
+ 	#cp -r cache/* $(CACHE_DIR)/ 2>/dev/null || true
 
 	@echo "Done."
-	@echo "Make sure $(BIN_DIR) is in your PATH"
+	# check if BIN_DIR is in PATH
+	if ! echo "$$PATH" | grep -q "$(BIN_DIR)"; then \
+		@echo "Warning: $(BIN_DIR) is not in your PATH. You may want to add it to run yt-player from anywhere."; \
+	fi
 
 uninstall:
 	@echo "Removing yt-player..."

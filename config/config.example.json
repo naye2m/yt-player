@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "name:str": "Studying White Noise",
+      "url|query:str": "https://www.youtube.com/watch?v=yLOM8R6lbzg",
+      "volume:int 0-10&1=100%": 0.7
+    },
+    {
+      "name": "lofi",
+      "query": "lofi hip hop radio",
+      "volume": 0.5
+    },
+    {
+      "name": "mix1",
+      "url": "https://www.youtube.com/watch?v=yIQd2Ya0Ziw",
+      "volume": 1
+    }
+  ]
+}

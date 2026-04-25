@@ -27,12 +27,15 @@ sudo apt install yt-dlp mpv jq
 ### new
 
 ```bash
-tar -xzf yt-player.tar.gz
+#git clone https://github.com/naye2m/yt-player
+#or
+#tar -xzf yt-player.tar.gz
+
 cd yt-player
 make install
 ```
 
-### old
+### old (depricated)
 
 1. Edit `config.json` with your items.
 2. Run:

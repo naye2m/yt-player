@@ -29,7 +29,7 @@ sudo apt install yt-dlp mpv jq
 ```bash
 #git clone https://github.com/naye2m/yt-player
 #or
-#tar -xzf yt-player*.tar.gz # install releazes
+#mkdir yt-player && tar -xzf yt-player*.tar.gz -C yt-player # install releazes
 
 cd yt-player
 make install
